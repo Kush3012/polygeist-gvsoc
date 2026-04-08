@@ -168,11 +168,11 @@ build_pulp_llvm() {
         info "pulp-llvm already configured."
     fi
 
-    info "Building llc, clang, ld.lld (this may take 30-60 minutes)..."
-    cmake --build "$BUILD" --target llc clang ld.lld -- -j"$NPROC"
+    info "Building llc, clang, lld (this may take 30-60 minutes)..."
+    cmake --build "$BUILD" --target llc clang lld -- -j"$NPROC"
 
-    # Verify
-    for tool in llc clang ld.lld; do
+    # Verify (ld.lld is a symlink to lld)
+    for tool in llc clang lld; do
         if [ ! -f "$BUILD/bin/$tool" ]; then
             error "Failed to build $tool"
         fi

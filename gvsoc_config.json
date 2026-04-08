@@ -3798,10 +3798,10 @@
           "first_external_pcer": 12,
           "riscv_dbg_unit": true,
           "debug_binaries": [
-            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_gemm.elf.debugInfo"
+            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_test_omp.elf.debugInfo"
           ],
           "binaries": [
-            "gemm.elf"
+            "test_omp.elf"
           ],
           "debug_handler": 437848064,
           "power_models": {},
@@ -3836,10 +3836,10 @@
           "first_external_pcer": 12,
           "riscv_dbg_unit": true,
           "debug_binaries": [
-            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_gemm.elf.debugInfo"
+            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_test_omp.elf.debugInfo"
           ],
           "binaries": [
-            "gemm.elf"
+            "test_omp.elf"
           ],
           "debug_handler": 437848064,
           "power_models": {},
@@ -3874,10 +3874,10 @@
           "first_external_pcer": 12,
           "riscv_dbg_unit": true,
           "debug_binaries": [
-            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_gemm.elf.debugInfo"
+            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_test_omp.elf.debugInfo"
           ],
           "binaries": [
-            "gemm.elf"
+            "test_omp.elf"
           ],
           "debug_handler": 437848064,
           "power_models": {},
@@ -3912,10 +3912,10 @@
           "first_external_pcer": 12,
           "riscv_dbg_unit": true,
           "debug_binaries": [
-            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_gemm.elf.debugInfo"
+            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_test_omp.elf.debugInfo"
           ],
           "binaries": [
-            "gemm.elf"
+            "test_omp.elf"
           ],
           "debug_handler": 437848064,
           "power_models": {},
@@ -3950,10 +3950,10 @@
           "first_external_pcer": 12,
           "riscv_dbg_unit": true,
           "debug_binaries": [
-            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_gemm.elf.debugInfo"
+            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_test_omp.elf.debugInfo"
           ],
           "binaries": [
-            "gemm.elf"
+            "test_omp.elf"
           ],
           "debug_handler": 437848064,
           "power_models": {},
@@ -3988,10 +3988,10 @@
           "first_external_pcer": 12,
           "riscv_dbg_unit": true,
           "debug_binaries": [
-            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_gemm.elf.debugInfo"
+            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_test_omp.elf.debugInfo"
           ],
           "binaries": [
-            "gemm.elf"
+            "test_omp.elf"
           ],
           "debug_handler": 437848064,
           "power_models": {},
@@ -4026,10 +4026,10 @@
           "first_external_pcer": 12,
           "riscv_dbg_unit": true,
           "debug_binaries": [
-            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_gemm.elf.debugInfo"
+            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_test_omp.elf.debugInfo"
           ],
           "binaries": [
-            "gemm.elf"
+            "test_omp.elf"
           ],
           "debug_handler": 437848064,
           "power_models": {},
@@ -4064,10 +4064,10 @@
           "first_external_pcer": 12,
           "riscv_dbg_unit": true,
           "debug_binaries": [
-            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_gemm.elf.debugInfo"
+            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_test_omp.elf.debugInfo"
           ],
           "binaries": [
-            "gemm.elf"
+            "test_omp.elf"
           ],
           "debug_handler": 437848064,
           "power_models": {},
@@ -4102,10 +4102,10 @@
           "first_external_pcer": 12,
           "riscv_dbg_unit": true,
           "debug_binaries": [
-            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_gemm.elf.debugInfo"
+            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_test_omp.elf.debugInfo"
           ],
           "binaries": [
-            "gemm.elf"
+            "test_omp.elf"
           ],
           "debug_handler": 437848064,
           "power_models": {},
@@ -6010,7 +6010,7 @@
         "loader": {
           "vp_component": "utils.loader.loader",
           "binary": [
-            "gemm.elf"
+            "test_omp.elf"
           ],
           "ports": [
             "out",
@@ -6107,10 +6107,10 @@
           "first_external_pcer": 12,
           "riscv_dbg_unit": true,
           "debug_binaries": [
-            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_gemm.elf.debugInfo"
+            "/home/kush3012/Polimi_Projects/FL_and_Compilers/debug_binary_0_test_omp.elf.debugInfo"
           ],
           "binaries": [
-            "gemm.elf"
+            "test_omp.elf"
           ],
           "debug_handler": 437848064,
           "power_models": {},
@@ -10504,86 +10504,15 @@
         "port": 42951
       },
       "events": {
-        "enabled": true,
-        "include_raw": [
-          "/chip/soc_clock_domain/period",
-          "/chip/cluster_clock/period",
-          "/chip/cluster/pe0/state",
-          "/chip/cluster/pe1/state",
-          "/chip/cluster/pe2/state",
-          "/chip/cluster/pe3/state",
-          "/chip/cluster/pe4/state",
-          "/chip/cluster/pe5/state",
-          "/chip/cluster/pe6/state",
-          "/chip/cluster/pe7/state",
-          "/chip/cluster/pe8/state",
-          "/chip/cluster/dma/channel_0",
-          "/chip/cluster/dma/channel_1",
-          "/chip/cluster/dma/channel_2",
-          "/chip/cluster/dma/channel_3",
-          "/chip/cluster/dma/channel_4",
-          "/chip/cluster/dma/channel_5",
-          "/chip/cluster/dma/channel_6",
-          "/chip/cluster/dma/channel_7",
-          "/chip/cluster/dma/channel_8",
-          "/chip/cluster/dma/channel_9",
-          "/chip/cluster/dma/channel_10",
-          "/chip/cluster/dma/channel_11",
-          "/chip/cluster/dma/channel_12",
-          "/chip/cluster/dma/channel_13",
-          "/chip/cluster/dma/channel_14",
-          "/chip/cluster/dma/channel_15",
-          "/chip/soc/fc/state",
-          "/chip/soc/periph_clock/period",
-          "/chip/fast_clock/period",
-          "/chip/ref_clock/period",
-          "/uart_checker/clock/period",
-          "/chip/soc_clock_domain/period",
-          "/chip/cluster_clock/period",
-          "/chip/cluster/pe0/irq_enable",
-          "/chip/cluster/pe0/irq_enter",
-          "/chip/cluster/pe0/irq_exit",
-          "/chip/cluster/pe1/irq_enable",
-          "/chip/cluster/pe1/irq_enter",
-          "/chip/cluster/pe1/irq_exit",
-          "/chip/cluster/pe2/irq_enable",
-          "/chip/cluster/pe2/irq_enter",
-          "/chip/cluster/pe2/irq_exit",
-          "/chip/cluster/pe3/irq_enable",
-          "/chip/cluster/pe3/irq_enter",
-          "/chip/cluster/pe3/irq_exit",
-          "/chip/cluster/pe4/irq_enable",
-          "/chip/cluster/pe4/irq_enter",
-          "/chip/cluster/pe4/irq_exit",
-          "/chip/cluster/pe5/irq_enable",
-          "/chip/cluster/pe5/irq_enter",
-          "/chip/cluster/pe5/irq_exit",
-          "/chip/cluster/pe6/irq_enable",
-          "/chip/cluster/pe6/irq_enter",
-          "/chip/cluster/pe6/irq_exit",
-          "/chip/cluster/pe7/irq_enable",
-          "/chip/cluster/pe7/irq_enter",
-          "/chip/cluster/pe7/irq_exit",
-          "/chip/cluster/pe8/irq_enable",
-          "/chip/cluster/pe8/irq_enter",
-          "/chip/cluster/pe8/irq_exit",
-          "/chip/soc/fc/irq_enable",
-          "/chip/soc/fc/irq_enter",
-          "/chip/soc/fc/irq_exit",
-          "/chip/soc/periph_clock/period",
-          "/chip/fast_clock/period",
-          "/chip/ref_clock/period",
-          "/uart_checker/clock/period"
-        ],
-        "include_regex": [
-          ".*"
-        ],
+        "enabled": false,
+        "include_raw": [],
+        "include_regex": [],
         "exclude_regex": [],
         "format": "vcd",
         "active": false,
         "all": true,
         "gtkw": false,
-        "gen_gtkw": true,
+        "gen_gtkw": false,
         "files": [],
         "traces": {},
         "tags": [
@@ -10599,7 +10528,7 @@
       "werror": true,
       "verbose": true,
       "debug-mode": true,
-      "profile-mode": true,
+      "profile-mode": false,
       "launchers": {
         "default": "gvsoc_launcher",
         "debug": "gvsoc_launcher_debug"
@@ -10609,7 +10538,9 @@
         "format": "long",
         "float_hex": false,
         "enabled": false,
-        "include_regex": [],
+        "include_regex": [
+          "insn"
+        ],
         "exclude_regex": []
       },
       "systemc": false,
