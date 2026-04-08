@@ -1,0 +1,36 @@
+# Cloned repositories (have their own git)
+Polygeist/
+pulp-llvm/
+gvsoc/
+PolyBench-ACC/
+
+# Build artifacts
+*.o
+*.elf
+*.bin
+*.pyc
+__pycache__/
+build/
+
+# Report (excluded from repo)
+report/
+report 2.pdf
+
+# Simulation outputs
+*.log
+*.vcd
+power_report.csv
+trace_file.txt
+tx_uart.log
+hyperflash.bin
+debug_binary_*.debugInfo
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Archives
+*.tar.gz
