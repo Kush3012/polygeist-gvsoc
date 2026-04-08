@@ -68,55 +68,10 @@ Execution on PULP virtual platform
 | GVSoC | [gvsoc/gvsoc](https://github.com/gvsoc/gvsoc) | latest |
 | PolyBench-ACC | [cavazos-lab/PolyBench-ACC](https://github.com/cavazos-lab/PolyBench-ACC) | latest |
 
-## Supported Targets
-
-| Target | Description | Status |
-|--------|-------------|--------|
-| `rv32` | Single-core RISC-V (RV32IMFC) | ✅ Working |
-| `pulp-open` | Multi-core PULP cluster (8 PEs + FC) | ✅ Working |
-| `gap8` | GreenWaves GAP8 | ❌ Missing target definition (commercial) |
-| `gap9` | GreenWaves GAP9 | ❌ Missing target definition (commercial) |
-
-> **Note:** `pulp-open` already includes GAP9 ISA extensions (`rvXgap9`) in its ISA string.
-
-## Quick Start
-
-### Build the toolchains
-
-```bash
-make toolchain-all    # Builds Polygeist, pulp-llvm, GVSoC
-```
-
-### Run tests
-
-```bash
-make test-rv32        # Single-core test
-make test-pulp        # Multi-core PULP test
-```
-
-### Run benchmarks
-
-```bash
-cd benchmarks
-make TARGET=pulp-open OPENMP=1 run-gemm    # Run GEMM on PULP cluster
-make TARGET=pulp-open OPENMP=1 run-atax    # Run ATAX on PULP cluster
-```
-
-### Manual pipeline
-
-```bash
-./toolchain.sh simple_vecadd.c pulp-open   # Full C → GVSoC pipeline
-```
-
-## Key Findings
-
-- **ISS_SINGLE_REGFILE bug**: Default PULP core config aliases float/integer register files, corrupting SP on FP instructions. Fixed by removing `ISS_SINGLE_REGFILE=1` from `pulp_cores.py`.
-- **Custom OpenMP runtime**: Standard OpenMP runtimes don't work on bare-metal PULP. Custom `pulp_omp_runtime.c` uses TCDM test-and-set locks for inter-core synchronization.
-- **Dual-LLVM toolchain**: Polygeist requires LLVM 18 for MLIR features; pulp-llvm is LLVM 15 for PULP ISA extensions. The pipeline bridges them at the LLVM IR level.
 
 ## Authors
 
-- **Kush Mehta** — [Kush3012](https://github.com/Kush3012)
+- **Kushagra Varshney** — [Kush3012](https://github.com/Kush3012)
 - **Rajatkant Nayak** — [raj-2001-raj](https://github.com/raj-2001-raj)
 
 Politecnico di Milano — Formal Languages and Compilers
