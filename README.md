@@ -100,7 +100,7 @@ Clone and build everything with a single command:
 ```bash
 git clone https://github.com/Kush3012/polygeist-gvsoc.git
 cd polygeist-gvsoc
-chmod +x setup.sh test_all.sh toolchain.sh
+chmod +x setup.sh t toolchain.sh
 ./setup.sh              # Clone repos + build all toolchains (~1-2 hours)
 ```
 
@@ -119,25 +119,6 @@ The script will:
 5. Apply the ISS_SINGLE_REGFILE fix automatically
 6. Verify all 7 tools are available
 
-### Run the test suite
-
-```bash
-./test_all.sh           # Run all tests (tools + pipeline + benchmarks + HW tests)
-./test_all.sh --quick   # Tool check + basic pipeline tests only
-./test_all.sh --benchmarks  # PolyBench benchmarks only
-```
-
-`--quick` runs 11 checks: 7 tool availability + 2 rv32 pipeline + 2 pulp-open pipeline.
-
-### Manual pipeline usage
-
-Run the full C → GVSoC pipeline for a single file:
-
-```bash
-./toolchain.sh simple_vecadd.c rv32         # Single-core RISC-V
-./toolchain.sh simple_vecadd.c pulp-open    # Multi-core PULP cluster
-./toolchain.sh test_omp.c pulp-open         # OpenMP test on PULP
-```
 
 ### Run benchmarks
 
@@ -150,11 +131,6 @@ make TARGET=pulp-open OPENMP=1 run-2mm      # 2MM on PULP cluster
 make TARGET=pulp-open OPENMP=1 run-3mm      # 3MM on PULP cluster
 ```
 
-## Key Findings
-
-- **ISS_SINGLE_REGFILE bug**: Default PULP core config aliases float/integer register files, corrupting SP on FP instructions. Fixed by removing `ISS_SINGLE_REGFILE=1` from `pulp_cores.py`. The `setup.sh` script applies this fix automatically.
-- **Custom OpenMP runtime**: Standard OpenMP runtimes don't work on bare-metal PULP. Custom `pulp_omp_runtime.c` uses TCDM test-and-set locks for inter-core synchronization.
-- **Dual-LLVM toolchain**: Polygeist requires LLVM 18 for MLIR features; pulp-llvm is LLVM 15 for PULP ISA extensions. The pipeline bridges them at the LLVM IR level.
 
 ## Authors
 
