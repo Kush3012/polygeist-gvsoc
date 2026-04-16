@@ -12,7 +12,7 @@
 #
 # Prerequisites (install manually before running):
 #   sudo apt install build-essential cmake ninja-build git python3 python3-pip
-#   # GCC 12+ required. GCC 14 recommended for Polygeist (LLVM 18).
+#   # GCC 12 and GCC 14 must both be installed.
 # ============================================================================
 
 set -e
@@ -37,23 +37,16 @@ error() { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 check_prereqs() {
     info "Checking prerequisites..."
     local missing=()
-    for cmd in cmake ninja git python3 gcc g++; do
+    for cmd in cmake ninja git python3 gcc-12 g++-12 gcc-14 g++-14; do
         if ! command -v "$cmd" &>/dev/null; then
             missing+=("$cmd")
         fi
     done
     if [ ${#missing[@]} -ne 0 ]; then
-        error "Missing tools: ${missing[*]}
-Install with: sudo apt install build-essential cmake ninja-build git python3 python3-pip"
+        error "Missing tools: ${missing[*]}\nPlease install required GCC versions and build tools."
     fi
 
-    # Check GCC version (need >= 12)
-    GCC_VER=$(gcc -dumpversion | cut -d. -f1)
-    if [ "$GCC_VER" -lt 12 ]; then
-        warn "GCC $GCC_VER detected. GCC 12+ required (14 recommended for Polygeist)."
-    fi
-
-    info "Prerequisites OK (GCC $GCC_VER, $(cmake --version | head -1), $(ninja --version 2>/dev/null || echo 'ninja'))"
+    info "Prerequisites OK ($(cmake --version | head -1), $(ninja --version 2>/dev/null || echo 'ninja'))"
 }
 
 # ============================================================================
@@ -65,7 +58,8 @@ clone_repos() {
     # Polygeist (LLVM 18 C-to-MLIR frontend)
     if [ ! -d "$PROJECT_DIR/Polygeist" ]; then
         info "Cloning Polygeist..."
-        git clone --recursive https://github.com/llvm/Polygeist.git "$PROJECT_DIR/Polygeist"
+        git clone https://github.com/llvm/Polygeist.git "$PROJECT_DIR/Polygeist"
+        cd "$PROJECT_DIR/Polygeist" && git checkout 77c04bb && git submodule update --init --recursive
     else
         info "Polygeist already exists, skipping."
     fi
@@ -74,6 +68,7 @@ clone_repos() {
     if [ ! -d "$PROJECT_DIR/pulp-llvm" ]; then
         info "Cloning pulp-llvm..."
         git clone https://github.com/pulp-platform/llvm-project.git "$PROJECT_DIR/pulp-llvm"
+        cd "$PROJECT_DIR/pulp-llvm" && git checkout 15.0.0-snitch-0.5.0
     else
         info "pulp-llvm already exists, skipping."
     fi
@@ -94,7 +89,7 @@ clone_repos() {
         info "PolyBench-ACC already exists, skipping."
     fi
 
-    info "All repositories cloned."
+    info "All repositories cloned and checked out to stable commits."
 }
 
 # ============================================================================
@@ -103,8 +98,8 @@ clone_repos() {
 install_python_deps() {
     info "Installing Python dependencies..."
     if [ -f "$PROJECT_DIR/gvsoc/requirements.txt" ]; then
-        pip3 install --user -r "$PROJECT_DIR/gvsoc/requirements.txt" 2>/dev/null || \
-        pip3 install --user pyelftools || true
+        pip3 install --user --break-system-packages -r "$PROJECT_DIR/gvsoc/requirements.txt" 2>/dev/null || \
+        pip3 install --user --break-system-packages pyelftools || true
     fi
 }
 
@@ -122,18 +117,22 @@ build_polygeist() {
 
     mkdir -p "$BUILD"
     if [ ! -f "$BUILD/CMakeCache.txt" ]; then
-        info "Configuring Polygeist..."
+        info "Configuring Polygeist (Enforcing GCC-14)..."
         cmake -S "$SRC" -B "$BUILD" -G Ninja \
-            -DLLVM_ENABLE_PROJECTS="clang;mlir;openmp" \
-            -DLLVM_TARGETS_TO_BUILD="RISCV;X86" \
+            -DCMAKE_C_COMPILER=gcc-14 \
+            -DCMAKE_CXX_COMPILER=g++-14 \
+            -DLLVM_ENABLE_PROJECTS="clang;mlir" \
+            -DLLVM_EXTERNAL_PROJECTS="polygeist" \
+            -DLLVM_EXTERNAL_POLYGEIST_SOURCE_DIR="$PROJECT_DIR/Polygeist" \
+            -DLLVM_TARGETS_TO_BUILD="host;RISCV" \
             -DLLVM_ENABLE_ASSERTIONS=ON \
             -DCMAKE_BUILD_TYPE=Release
     else
         info "Polygeist already configured."
     fi
 
-    info "Building cgeist, mlir-opt, mlir-translate (this may take 30-60 minutes)..."
-    cmake --build "$BUILD" --target cgeist mlir-opt mlir-translate -- -j"$NPROC"
+    info "Building cgeist, mlir-opt, mlir-translate, llc (this may take 30-60 minutes)..."
+    cmake --build "$BUILD" --target cgeist polygeist-opt mlir-opt mlir-translate llc -- -j"$NPROC"
 
     # Verify
     for tool in cgeist mlir-opt mlir-translate; do
@@ -158,11 +157,14 @@ build_pulp_llvm() {
 
     mkdir -p "$BUILD"
     if [ ! -f "$BUILD/CMakeCache.txt" ]; then
-        info "Configuring pulp-llvm..."
+        info "Configuring pulp-llvm (Enforcing GCC-12 and disabling assertions)..."
         cmake -S "$SRC" -B "$BUILD" -G Ninja \
+            -DCMAKE_C_COMPILER=gcc-12 \
+            -DCMAKE_CXX_COMPILER=g++-12 \
             -DLLVM_ENABLE_PROJECTS="clang;lld" \
-            -DLLVM_TARGETS_TO_BUILD="RISCV;X86" \
-            -DLLVM_ENABLE_ASSERTIONS=ON \
+            -DLLVM_TARGETS_TO_BUILD="RISCV" \
+            -DLLVM_DEFAULT_TARGET_TRIPLE="riscv32-unknown-elf" \
+            -DLLVM_ENABLE_ASSERTIONS=OFF \
             -DCMAKE_BUILD_TYPE=Release
     else
         info "pulp-llvm already configured."
@@ -187,9 +189,17 @@ build_gvsoc() {
     info "=== Building GVSoC ==="
     local SRC="$PROJECT_DIR/gvsoc"
     local BUILD="$PROJECT_DIR/gvsoc/build"
+    local PULP_CORES="$SRC/pulp/pulp/cpu/iss/pulp_cores.py"
 
     if [ ! -f "$SRC/CMakeLists.txt" ]; then
         error "GVSoC source not found at $SRC. Run with --clone first."
+    fi
+
+    # Apply ISS_SINGLE_REGFILE fix before configuring
+    if grep -q "ISS_SINGLE_REGFILE" "$PULP_CORES" 2>/dev/null; then
+        info "Applying ISS_SINGLE_REGFILE fix (float/int register aliasing bug)..."
+        sed -i 's/"-DISS_SINGLE_REGFILE=1",//g' "$PULP_CORES" || true
+        sed -i 's/"-DCONFIG_GVSOC_ISS_NO_MSTATUS_FS=1"//g' "$PULP_CORES" || true
     fi
 
     mkdir -p "$BUILD"
@@ -203,15 +213,6 @@ build_gvsoc() {
     info "Building GVSoC..."
     cmake --build "$BUILD" -- -j"$NPROC"
     cmake --install "$BUILD"
-
-    # Apply ISS_SINGLE_REGFILE fix if needed
-    local PULP_CORES="$SRC/pulp/pulp/cpu/iss/pulp_cores.py"
-    if grep -q "ISS_SINGLE_REGFILE" "$PULP_CORES" 2>/dev/null; then
-        info "Applying ISS_SINGLE_REGFILE fix (float/int register aliasing bug)..."
-        sed -i 's/.*ISS_SINGLE_REGFILE.*//' "$PULP_CORES"
-        cmake --build "$BUILD" -- -j"$NPROC"
-        cmake --install "$BUILD"
-    fi
 
     info "GVSoC built and installed."
 }
@@ -264,7 +265,6 @@ verify() {
         info "Next steps:"
         echo "  make test-all                                    # Run sanity tests"
         echo "  cd benchmarks && make TARGET=pulp-open OPENMP=1 run-gemm  # Run GEMM"
-        echo "  ./test_all.sh                                    # Full test suite"
     else
         warn "$ok/$total tools found. Some builds may have failed."
     fi
