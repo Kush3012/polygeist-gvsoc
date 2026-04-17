@@ -40,31 +40,40 @@ static void kernel_3mm(int ni, int nj, int nk, int nl, int nm,
     int i, j, k;
 
     // E := A * B
-    #pragma omp parallel for private(j, k)
-    for (i = 0; i < ni; i++)
-        for (j = 0; j < nj; j++) {
-            E[i][j] = 0.0f;
-            for (k = 0; k < nk; k++)
-                E[i][j] += A[i][k] * B[k][j];
-        }
+    #pragma omp parallel
+    {
+        #pragma omp for private(j, k)
+        for (i = 0; i < ni; i++)
+            for (j = 0; j < nj; j++) {
+                E[i][j] = 0.0f;
+                for (k = 0; k < nk; k++)
+                    E[i][j] += A[i][k] * B[k][j];
+            }
+    }
 
     // F := C * D
-    #pragma omp parallel for private(j, k)
-    for (i = 0; i < nj; i++)
-        for (j = 0; j < nl; j++) {
-            F[i][j] = 0.0f;
-            for (k = 0; k < nm; k++)
-                F[i][j] += C[i][k] * D[k][j];
-        }
+    #pragma omp parallel
+    {
+        #pragma omp for private(j, k)
+        for (i = 0; i < nj; i++)
+            for (j = 0; j < nl; j++) {
+                F[i][j] = 0.0f;
+                for (k = 0; k < nm; k++)
+                    F[i][j] += C[i][k] * D[k][j];
+            }
+    }
 
     // G := E * F
-    #pragma omp parallel for private(j, k)
-    for (i = 0; i < ni; i++)
-        for (j = 0; j < nl; j++) {
-            G[i][j] = 0.0f;
-            for (k = 0; k < nj; k++)
-                G[i][j] += E[i][k] * F[k][j];
-        }
+    #pragma omp parallel
+    {
+        #pragma omp for private(j, k)
+        for (i = 0; i < ni; i++)
+            for (j = 0; j < nl; j++) {
+                G[i][j] = 0.0f;
+                for (k = 0; k < nj; k++)
+                    G[i][j] += E[i][k] * F[k][j];
+            }
+    }
 }
 
 int main() {

@@ -42,6 +42,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # ============================================================================
 RUN apt-get update && apt-get install -y --no-install-recommends \
         gcc-12 g++-12 \
+        gcc-13 g++-13 \
         gcc-14 g++-14 \
     && rm -rf /var/lib/apt/lists/*
 

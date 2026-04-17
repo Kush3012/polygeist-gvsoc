@@ -39,7 +39,12 @@ fi
 # ==========================================
 # PATH CONFIGURATIONS
 # ==========================================
-PROJECT_DIR="/home/kush3012/Polimi_Projects/FL_and_Compilers"
+# Auto-detect project root: use WORKSPACE env var (Docker) or derive from script location
+if [ -n "$WORKSPACE" ]; then
+    PROJECT_DIR="$WORKSPACE"
+else
+    PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
+fi
 
 # Polygeist (LLVM 18) - Frontend & MLIR tools
 POLYGEIST_BIN="${PROJECT_DIR}/Polygeist/build/bin"
@@ -208,10 +213,14 @@ fi
 
 # --- STEP 7: Execute on GVSoC ---
 echo "[7/7] Executing on GVSoC (${GVSOC_TARGET})..."
-source "$GVSOC_ENV"
+# Set up GVSoC environment directly (no sourceme.sh needed)
+GVSOC_INSTALL="${PROJECT_DIR}/gvsoc/install"
+export PATH="${GVSOC_INSTALL}/bin:${PROJECT_DIR}/gvsoc/gapy/bin:${PATH}"
+export PYTHONPATH="${GVSOC_INSTALL}/python:${PYTHONPATH:-}"
+export LD_LIBRARY_PATH="${GVSOC_INSTALL}/lib:${LD_LIBRARY_PATH:-}"
 echo "----------------------------------------"
-#gvsoc --target=${GVSOC_TARGET} --binary="$ELF_FILE" run
-gvsoc --target=${GVSOC_TARGET} --binary="$ELF_FILE" --trace=insn run
+gvsoc --target=${GVSOC_TARGET} --binary="$ELF_FILE" run
+GVSOC_RC=$?
 echo "----------------------------------------"
-
-echo "Execution Complete! (exit code: $?)"
+echo "Execution Complete! (exit code: $GVSOC_RC)"
+exit $GVSOC_RC

@@ -630,7 +630,6 @@
       "cluster": {
         "l1": {
           "bank0": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": true,
@@ -736,7 +735,6 @@
             ]
           },
           "bank1": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -842,7 +840,6 @@
             ]
           },
           "bank2": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -948,7 +945,6 @@
             ]
           },
           "bank3": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -1054,7 +1050,6 @@
             ]
           },
           "bank4": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -1160,7 +1155,6 @@
             ]
           },
           "bank5": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -1266,7 +1260,6 @@
             ]
           },
           "bank6": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -1372,7 +1365,6 @@
             ]
           },
           "bank7": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -1478,7 +1470,6 @@
             ]
           },
           "bank8": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -1584,7 +1575,6 @@
             ]
           },
           "bank9": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -1690,7 +1680,6 @@
             ]
           },
           "bank10": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -1796,7 +1785,6 @@
             ]
           },
           "bank11": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -1902,7 +1890,6 @@
             ]
           },
           "bank12": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -2008,7 +1995,6 @@
             ]
           },
           "bank13": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -2114,7 +2100,6 @@
             ]
           },
           "bank14": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -2220,7 +2205,6 @@
             ]
           },
           "bank15": {
-            "init": true,
             "size": 4096,
             "stim_file": null,
             "power_trigger": false,
@@ -5983,9 +5967,8 @@
           ]
         },
         "debug_rom": {
-          "init": true,
           "size": "0x00000800",
-          "stim_file": "/home/kush3012/Polimi_Projects/FL_and_Compilers/gvsoc/install/generators/pulp/chips/pulp/debug_rom.bin",
+          "stim_file": "/workspace/gvsoc/install/generators/pulp/chips/pulp/debug_rom.bin",
           "power_trigger": false,
           "width_bits": -1,
           "align": 0,
@@ -6810,7 +6793,7 @@
             },
             "ddr": {
               "base": 2147483648,
-              "size": 1073741824,
+              "size": 1048576,
               "remove_offset": 2147483648,
               "add_offset": 0,
               "latency": 0
@@ -7054,7 +7037,6 @@
         },
         "l2": {
           "priv0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": true,
@@ -7071,7 +7053,6 @@
             ]
           },
           "priv1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7105,7 +7086,6 @@
             ]
           },
           "shared_0_cut_0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7122,7 +7102,6 @@
             ]
           },
           "shared_0_cut_1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7139,7 +7118,6 @@
             ]
           },
           "shared_0_cut_2": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7156,7 +7134,6 @@
             ]
           },
           "shared_0_cut_3": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7190,7 +7167,6 @@
             ]
           },
           "shared_1_cut_0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7207,7 +7183,6 @@
             ]
           },
           "shared_1_cut_1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7224,7 +7199,6 @@
             ]
           },
           "shared_1_cut_2": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7241,7 +7215,6 @@
             ]
           },
           "shared_1_cut_3": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7275,7 +7248,6 @@
             ]
           },
           "shared_2_cut_0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7292,7 +7264,6 @@
             ]
           },
           "shared_2_cut_1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7309,7 +7280,6 @@
             ]
           },
           "shared_2_cut_2": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7326,7 +7296,6 @@
             ]
           },
           "shared_2_cut_3": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7360,7 +7329,6 @@
             ]
           },
           "shared_3_cut_0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7377,7 +7345,6 @@
             ]
           },
           "shared_3_cut_1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7394,7 +7361,6 @@
             ]
           },
           "shared_3_cut_2": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7411,7 +7377,6 @@
             ]
           },
           "shared_3_cut_3": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7445,7 +7410,6 @@
             ]
           },
           "shared_4_cut_0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7462,7 +7426,6 @@
             ]
           },
           "shared_4_cut_1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7479,7 +7442,6 @@
             ]
           },
           "shared_4_cut_2": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7496,7 +7458,6 @@
             ]
           },
           "shared_4_cut_3": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7530,7 +7491,6 @@
             ]
           },
           "shared_5_cut_0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7547,7 +7507,6 @@
             ]
           },
           "shared_5_cut_1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7564,7 +7523,6 @@
             ]
           },
           "shared_5_cut_2": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7581,7 +7539,6 @@
             ]
           },
           "shared_5_cut_3": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7615,7 +7572,6 @@
             ]
           },
           "shared_6_cut_0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7632,7 +7588,6 @@
             ]
           },
           "shared_6_cut_1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7649,7 +7604,6 @@
             ]
           },
           "shared_6_cut_2": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7666,7 +7620,6 @@
             ]
           },
           "shared_6_cut_3": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7700,7 +7653,6 @@
             ]
           },
           "shared_7_cut_0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7717,7 +7669,6 @@
             ]
           },
           "shared_7_cut_1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7734,7 +7685,6 @@
             ]
           },
           "shared_7_cut_2": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7751,7 +7701,6 @@
             ]
           },
           "shared_7_cut_3": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7785,7 +7734,6 @@
             ]
           },
           "shared_8_cut_0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7802,7 +7750,6 @@
             ]
           },
           "shared_8_cut_1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7819,7 +7766,6 @@
             ]
           },
           "shared_8_cut_2": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7836,7 +7782,6 @@
             ]
           },
           "shared_8_cut_3": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7870,7 +7815,6 @@
             ]
           },
           "shared_9_cut_0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7887,7 +7831,6 @@
             ]
           },
           "shared_9_cut_1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7904,7 +7847,6 @@
             ]
           },
           "shared_9_cut_2": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7921,7 +7863,6 @@
             ]
           },
           "shared_9_cut_3": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7955,7 +7896,6 @@
             ]
           },
           "shared_10_cut_0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7972,7 +7912,6 @@
             ]
           },
           "shared_10_cut_1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -7989,7 +7928,6 @@
             ]
           },
           "shared_10_cut_2": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -8006,7 +7944,6 @@
             ]
           },
           "shared_10_cut_3": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -8040,7 +7977,6 @@
             ]
           },
           "shared_11_cut_0": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -8057,7 +7993,6 @@
             ]
           },
           "shared_11_cut_1": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -8074,7 +8009,6 @@
             ]
           },
           "shared_11_cut_2": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -8091,7 +8025,6 @@
             ]
           },
           "shared_11_cut_3": {
-            "init": true,
             "size": 32768,
             "stim_file": null,
             "power_trigger": false,
@@ -10481,7 +10414,7 @@
         "use-external-dumper": null
       },
       "include_dirs": [
-        "/home/kush3012/Polimi_Projects/FL_and_Compilers/gvsoc/install/models"
+        "/workspace/gvsoc/install/models"
       ],
       "runner_module": "gv.gvsoc",
       "cycles_to_seconds": "int(max(cycles * nb_cores / 5000000, 600))",

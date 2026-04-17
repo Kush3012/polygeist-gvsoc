@@ -37,7 +37,7 @@ error() { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 check_prereqs() {
     info "Checking prerequisites..."
     local missing=()
-    for cmd in cmake ninja git python3 gcc-12 g++-12 gcc-14 g++-14; do
+    for cmd in cmake ninja git python3 gcc-12 g++-12 gcc-13 g++-13 gcc-14 g++-14; do
         if ! command -v "$cmd" &>/dev/null; then
             missing+=("$cmd")
         fi
@@ -74,9 +74,11 @@ clone_repos() {
     fi
 
     # GVSoC (cycle-accurate RISC-V simulator)
+    # Pin to a9fbef0 (Nov 28 2025) to avoid broken CMake in later commits
     if [ ! -d "$PROJECT_DIR/gvsoc" ]; then
-        info "Cloning GVSoC..."
-        git clone --recursive https://github.com/gvsoc/gvsoc.git "$PROJECT_DIR/gvsoc"
+        info "Cloning GVSoC (pinned to a9fbef0)..."
+        git clone https://github.com/gvsoc/gvsoc.git "$PROJECT_DIR/gvsoc"
+        cd "$PROJECT_DIR/gvsoc" && git checkout a9fbef0 && git submodule update --init --recursive
     else
         info "GVSoC already exists, skipping."
     fi
@@ -117,10 +119,10 @@ build_polygeist() {
 
     mkdir -p "$BUILD"
     if [ ! -f "$BUILD/CMakeCache.txt" ]; then
-        info "Configuring Polygeist (Enforcing GCC-14)..."
+        info "Configuring Polygeist (Enforcing GCC-13)..."
         cmake -S "$SRC" -B "$BUILD" -G Ninja \
-            -DCMAKE_C_COMPILER=gcc-14 \
-            -DCMAKE_CXX_COMPILER=g++-14 \
+            -DCMAKE_C_COMPILER=gcc-13 \
+            -DCMAKE_CXX_COMPILER=g++-13 \
             -DLLVM_ENABLE_PROJECTS="clang;mlir" \
             -DLLVM_EXTERNAL_PROJECTS="polygeist" \
             -DLLVM_EXTERNAL_POLYGEIST_SOURCE_DIR="$PROJECT_DIR/Polygeist" \
@@ -196,16 +198,33 @@ build_gvsoc() {
     fi
 
     # Apply ISS_SINGLE_REGFILE fix before configuring
+    # ISS_SINGLE_REGFILE=1 aliases float/int registers in the RI5CY ISS,
+    # causing float computations to read corrupted values. Remove entire lines.
     if grep -q "ISS_SINGLE_REGFILE" "$PULP_CORES" 2>/dev/null; then
         info "Applying ISS_SINGLE_REGFILE fix (float/int register aliasing bug)..."
-        sed -i 's/"-DISS_SINGLE_REGFILE=1",//g' "$PULP_CORES" || true
-        sed -i 's/"-DCONFIG_GVSOC_ISS_NO_MSTATUS_FS=1"//g' "$PULP_CORES" || true
+        sed -i '/ISS_SINGLE_REGFILE/d' "$PULP_CORES" || true
+        sed -i '/CONFIG_GVSOC_ISS_NO_MSTATUS_FS/d' "$PULP_CORES" || true
     fi
 
     mkdir -p "$BUILD"
     if [ ! -f "$BUILD/CMakeCache.txt" ]; then
         info "Configuring GVSoC..."
-        cmake -S "$SRC" -B "$BUILD" -DCMAKE_BUILD_TYPE=Release
+
+        # First build gvrun (matching GVSoC Makefile for this commit)
+        cmake -S "$SRC/gvrun" -B "$BUILD/gvrun" -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$SRC/install"
+        cmake --build "$BUILD/gvrun" -- -j"$NPROC"
+        cmake --install "$BUILD/gvrun"
+
+        # Configure main GVSoC build with proper modules and targets
+        # gapy must be on PATH for CMake's execute_process to find it
+        export PATH="$SRC/gapy/bin:$SRC/install/bin:$PATH"
+        export PYTHONPATH="$SRC/install/python:${PYTHONPATH:-}"
+        cd "$SRC" && cmake -S . -B "$BUILD" -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$SRC/install" \
+            -DGVSOC_MODULES="$SRC/core/models;$SRC/pulp;$SRC/gvrun/python" \
+            -DGVSOC_TARGETS="pulp-open" \
+            -DCMAKE_SKIP_INSTALL_RPATH=false
     else
         info "GVSoC already configured."
     fi

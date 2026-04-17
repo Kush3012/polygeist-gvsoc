@@ -185,7 +185,7 @@ test_hw() {
     fi
 
     for test_name in test_boot test_dispatch test_omp test_tcdm_lock; do
-        if grep -q "$test_name" "$BENCH_DIR/Makefile" 2>/dev/null; then
+        if grep -q "run-$test_name" "$BENCH_DIR/Makefile" 2>/dev/null; then
             run_test "hw: $test_name" \
                 make -C "$BENCH_DIR" TARGET=pulp-open "run-$test_name"
         else
