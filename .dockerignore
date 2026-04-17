@@ -1,0 +1,23 @@
+# Exclude build artifacts and large cloned repos (setup.sh will clone them fresh)
+Polygeist/
+pulp-llvm/
+gvsoc/
+PolyBench-ACC/
+gvsoc_env/
+
+# Build outputs
+benchmarks/build/
+*.elf
+*.o
+*.vcd
+*.pcapng
+
+# Debug info
+debug_binary_*
+chip.*.txt
+trace_file.txt
+
+# Editor / OS
+.vscode/
+.git/
+__pycache__/
