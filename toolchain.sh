@@ -19,6 +19,15 @@
 
 set -e
 
+# Portable sed -i (works on GNU and BSD/macOS)
+sedi() {
+    if sed --version 2>/dev/null | grep -q GNU; then
+        sed -i "$@"
+    else
+        sed -i '' "$@"
+    fi
+}
+
 if [ -z "$1" ]; then
     echo "Error: No source file provided."
     echo "Usage: ./toolchain.sh <file.c> [rv32|pulp-open]"
@@ -39,12 +48,7 @@ fi
 # ==========================================
 # PATH CONFIGURATIONS
 # ==========================================
-# Auto-detect project root: use WORKSPACE env var (Docker) or derive from script location
-if [ -n "$WORKSPACE" ]; then
-    PROJECT_DIR="$WORKSPACE"
-else
-    PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
-fi
+PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Polygeist (LLVM 18) - Frontend & MLIR tools
 POLYGEIST_BIN="${PROJECT_DIR}/Polygeist/build/bin"
@@ -110,8 +114,7 @@ INPUT_ABS=$(realpath "$INPUT_FILE")
 CGEIST_INPUT="$INPUT_FILE"
 if echo "$INPUT_ABS" | grep -q "PolyBench-ACC"; then
     echo "[info] Detected PolyBench-ACC source — adding include paths and bare-metal defines."
-    CLANG_BUILTINS="${PROJECT_DIR}/pulp-llvm/build/lib/clang/15.0.0/include"
-    CGEIST_EXTRA_FLAGS="-I${POLYBENCH_UTILS} -I${CLANG_BUILTINS} -DMINI_DATASET -DDATA_TYPE=float -DDATA_PRINTF_MODIFIER=\"%0.2f\" -DPOLYBENCH_STACK_ARRAYS"
+    CGEIST_EXTRA_FLAGS="-I${POLYBENCH_UTILS} -DMINI_DATASET -DDATA_TYPE=float -DDATA_PRINTF_MODIFIER=\"%0.2f\" -DPOLYBENCH_STACK_ARRAYS"
     NEED_LIBC_STUBS=1
 
     # Sanitize the source for bare-metal compilation:
@@ -131,38 +134,15 @@ static FILE _stderr_dummy;
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
 #endif
-
 static inline int strcmp(const char *a, const char *b) { (void)a; (void)b; return 1; }
-
-/* Double-precision float compat headers */
-float sqrt(float x) { float guess = x / 2.0f; for(int i=0; i<10; i++) guess = (guess + x / guess) / 2.0f; return guess; }
-float __truncdfsf2(double x) { return (float)x; }
-double __extendsfdf2(float x) { return (double)x; }
-double __adddf3(double a, double b) { return (double)((float)a + (float)b); }
-double __subdf3(double a, double b) { return (double)((float)a - (float)b); }
-double __muldf3(double a, double b) { return (double)((float)a * (float)b); }
-double __divdf3(double a, double b) { return (double)((float)a / (float)b); }
-int __eqdf2(double a, double b) { return (float)a == (float)b; }
-int __ltdf2(double a, double b) { return (float)a < (float)b; }
-int __ledf2(double a, double b) { return (float)a <= (float)b; }
-int __gtdf2(double a, double b) { return (float)a > (float)b; }
-int __gedf2(double a, double b) { return (float)a >= (float)b; }
-int __unorddf2(double a, double b) { return 0; }
-int __nedf2(double a, double b) { return (float)a != (float)b; }
-int __floatsidf(int x) { return (double)x; }
-
 STUBS
-        # Strip system includes; after polybench.h include, override POLYBENCH_2D
-        # to use compile-time dimension constants (dim1,dim2) instead of runtime
-        # VLA parameters (ddim1,ddim2). This avoids 64-bit index arithmetic on
-        # the 32-bit RISC-V target, which causes stack corruption and crashes.
+        # Strip system includes, keep everything else
         sed \
             -e '/^#include <stdio\.h>/d' \
             -e '/^#include <unistd\.h>/d' \
             -e '/^#include <string\.h>/d' \
             -e '/^#include <math\.h>/d' \
             -e '/^#include <stdlib\.h>/d' \
-            -e 's|^#include <polybench\.h>|#include <polybench.h>\n#undef POLYBENCH_2D\n#define POLYBENCH_2D(var,dim1,dim2,ddim1,ddim2) var[dim1][dim2]|' \
             "$INPUT_FILE"
     } > "$SANITIZED"
     CGEIST_INPUT="$SANITIZED"
@@ -189,8 +169,7 @@ echo "[2/7] MLIR lowering (mlir-opt)..."
     --lower-affine \
     --convert-scf-to-cf \
     --convert-openmp-to-llvm \
-    --convert-index-to-llvm=index-bitwidth=32 \
-    --finalize-memref-to-llvm='index-bitwidth=32' \
+    --finalize-memref-to-llvm \
     --convert-func-to-llvm \
     --convert-arith-to-llvm \
     --convert-math-to-llvm \
@@ -203,8 +182,8 @@ echo "[3/7] MLIR -> LLVM IR (mlir-translate)..."
 "$MLIR_TRANSLATE" --mlir-to-llvmir "$LOWERED_MLIR" -o "$LLVM_IR"
 
 # Patch target triple and data layout (cgeist defaults to host x86_64)
-sed -i "s|target triple = \"[^\"]*\"|target triple = \"${RISCV_TRIPLE}\"|" "$LLVM_IR"
-sed -i "s|target datalayout = \"[^\"]*\"|target datalayout = \"${RISCV_DATALAYOUT}\"|" "$LLVM_IR"
+sedi "s|target triple = \"[^\"]*\"|target triple = \"${RISCV_TRIPLE}\"|" "$LLVM_IR"
+sedi "s|target datalayout = \"[^\"]*\"|target datalayout = \"${RISCV_DATALAYOUT}\"|" "$LLVM_IR"
 
 # --- STEP 4: LLVM IR -> RISC-V Assembly (PULP LLVM llc) ---
 echo "[4/7] LLVM IR -> RISC-V assembly (llc)..."
@@ -238,14 +217,10 @@ fi
 
 # --- STEP 7: Execute on GVSoC ---
 echo "[7/7] Executing on GVSoC (${GVSOC_TARGET})..."
-# Set up GVSoC environment directly (no sourceme.sh needed)
-GVSOC_INSTALL="${PROJECT_DIR}/gvsoc/install"
-export PATH="${GVSOC_INSTALL}/bin:${PROJECT_DIR}/gvsoc/gapy/bin:${PATH}"
-export PYTHONPATH="${GVSOC_INSTALL}/python:${PYTHONPATH:-}"
-export LD_LIBRARY_PATH="${GVSOC_INSTALL}/lib:${LD_LIBRARY_PATH:-}"
+source "$GVSOC_ENV"
 echo "----------------------------------------"
 gvsoc --target=${GVSOC_TARGET} --binary="$ELF_FILE" run
-GVSOC_RC=$?
+#gvsoc --target=${GVSOC_TARGET} --binary="$ELF_FILE" --trace=insn run
 echo "----------------------------------------"
-echo "Execution Complete! (exit code: $GVSOC_RC)"
-exit $GVSOC_RC
+
+echo "Execution Complete! (exit code: $?)"
