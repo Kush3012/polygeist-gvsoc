@@ -109,7 +109,7 @@ CGEIST_OMP  :=
 endif
 
 # Benchmark list
-BENCHMARKS := gemm atax 2mm 3mm
+BENCHMARKS := gemm atax 2mm 3mm floyd-warshall
 
 # HW verification tests (pulp-open only):
 #   HW_BARE  = define their own _worker_entry, compiled directly with clang (no MLIR pipeline)
@@ -185,6 +185,7 @@ gemm: $(BUILD_DIR)/gemm.elf
 atax: $(BUILD_DIR)/atax.elf
 2mm:  $(BUILD_DIR)/2mm.elf
 3mm:  $(BUILD_DIR)/3mm.elf
+floyd-warshall: $(BUILD_DIR)/floyd-warshall.elf
 
 # Run targets on GVSoC (rv32)
 run-gemm: $(BUILD_DIR)/gemm.elf
@@ -201,6 +202,10 @@ run-2mm: $(BUILD_DIR)/2mm.elf
 
 run-3mm: $(BUILD_DIR)/3mm.elf
 	@echo "=== Running 3MM on GVSoC ($(GVSOC_TARGET)) ==="
+	$(GVSOC) --target=$(GVSOC_TARGET) --binary=$< run
+
+run-floyd-warshall: $(BUILD_DIR)/floyd-warshall.elf
+	@echo "=== Running Floyd-Warshall on GVSoC ($(GVSOC_TARGET)) ==="
 	$(GVSOC) --target=$(GVSOC_TARGET) --binary=$< run
 
 run-all: $(addprefix run-,$(BENCHMARKS))
