@@ -1,7 +1,10 @@
 # Polygeist-GVSoC: C-to-RISC-V MLIR Compilation Pipeline for PULP
 
+[![Full Report (Overleaf)](https://img.shields.io/badge/Full_Report-Overleaf-47a141?logo=overleaf)](https://www.overleaf.com/read/jgtzbdzzvjfx#d137f8)
+
 A complete toolchain for compiling C programs with OpenMP parallelism through MLIR to bare-metal RISC-V binaries, targeting the PULP multi-core cluster platform simulated on GVSoC.
 
+*📖 Read the **[full, cycle-accurate project report on Overleaf](https://www.overleaf.com/read/jgtzbdzzvjfx#d137f8)** for an in-depth breakdown of the architecture, technical challenges, and hardware profiling results.*
 ---
 
 ## Overview
