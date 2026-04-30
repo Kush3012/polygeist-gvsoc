@@ -255,14 +255,14 @@ Building with `OPENMP=0` produces no `omp.parallel` ops — the cluster is never
 **`#pragma omp parallel for` produces no OMP ops**
 Polygeist's `cgeist` requires the **split form** of the pragma:
 ```c
-// ✅ Correct — works with Polygeist
+//  Correct — works with Polygeist
 #pragma omp parallel
 {
     #pragma omp for
     for (i = 0; i < n; i++) { ... }
 }
 
-// ❌ Wrong — combined form not lowered by cgeist
+//  Wrong — combined form not lowered by cgeist
 #pragma omp parallel for
 for (i = 0; i < n; i++) { ... }
 ```
